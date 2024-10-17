@@ -5,10 +5,6 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract SoulboundNFT is ERC721Enumerable {
-    error TokenIdDoesNotExist();
-    error SoulboundNFTTokenTransferNotAllowed();
-    error NFTAlreadyMinted();
-
     struct AthleteData {
         uint256[] eventIds;
         mapping(uint256 => string) eventResults; // eventId => result
@@ -16,6 +12,10 @@ contract SoulboundNFT is ERC721Enumerable {
 
     mapping(uint256 => AthleteData) private _athleteData;
     uint256 private _tokenIdCounter;
+
+    error TokenIdDoesNotExist();
+    error SoulboundNFTTokenTransferNotAllowed();
+    error NFTAlreadyMinted();
 
     constructor() ERC721("AthleteProof", "APROOF") {}
 

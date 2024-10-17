@@ -27,6 +27,7 @@ contract Event is Ownable {
     error ResultsNotUploadedYet();
     error ParticipantNotRegistered();
     error NoSouldBoundNFT();
+    error RegisterPeriodExpired();
 
     constructor(
         string memory _name,
@@ -45,6 +46,7 @@ contract Event is Ownable {
     function register() public {
         if (isRegistered[msg.sender]) revert UserAlreadyRegistered();
         if (registeredParticipants >= maxParticipants) revert MaxRegisteredParticipantsReached();
+        if (resultsUploaded) revert RegisterPeriodExpired();
         
         if (nftContract.balanceOf(msg.sender) == 0) revert NoSouldBoundNFT();
         isRegistered[msg.sender] = true;
@@ -62,7 +64,6 @@ contract Event is Ownable {
             results[participants[i]] = _results[i];
 
             uint256 tokenId = nftContract.tokenOfOwnerByIndex(participants[i], 0);
-            // @audit Should the address of the contract be the event id?
             nftContract.addEventResult(tokenId, uint256(uint160(address(this))), _results[i]);
         }
 
