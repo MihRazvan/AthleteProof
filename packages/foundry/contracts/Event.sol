@@ -59,7 +59,7 @@ contract Event is Ownable {
     function uploadResults(
         address[] memory participants,
         string[] memory _results
-    ) public onlyOwner {
+    ) public {
         if (resultsUploaded) revert ResultsAlreadyUploaded();
         if (participants.length != _results.length)
             revert MismatchInParticipansAndResults();

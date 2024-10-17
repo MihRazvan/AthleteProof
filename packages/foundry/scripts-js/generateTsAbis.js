@@ -83,42 +83,75 @@ function main() {
   );
   const current_path_to_deployments = join(__dirname, "..", "deployments");
 
+  console.log("Current path to broadcast:", current_path_to_broadcast);
+  console.log("Current path to deployments:", current_path_to_deployments);
+
   const chains = getDirectories(current_path_to_broadcast);
   const Deploymentchains = getFiles(current_path_to_deployments);
+
+  console.log("Chains:", chains);
+  console.log("Deployment chains:", Deploymentchains);
 
   const deployments = {};
 
   Deploymentchains.forEach((chain) => {
     if (!chain.endsWith(".json")) return;
     chain = chain.slice(0, -5);
-    var deploymentObject = JSON.parse(
-      readFileSync(`${current_path_to_deployments}/${chain}.json`)
-    );
-    deployments[chain] = deploymentObject;
+    try {
+      var deploymentObject = JSON.parse(
+        readFileSync(`${current_path_to_deployments}/${chain}.json`)
+      );
+      deployments[chain] = deploymentObject;
+    } catch (error) {
+      console.error(`Error reading deployment file for chain ${chain}:`, error);
+    }
   });
+
+  console.log("Deployments:", deployments);
 
   const allGeneratedContracts = {};
 
   chains.forEach((chain) => {
     allGeneratedContracts[chain] = {};
-    const broadCastObject = JSON.parse(
-      readFileSync(`${current_path_to_broadcast}/${chain}/run-latest.json`)
-    );
+    let broadCastObject;
+    try {
+      broadCastObject = JSON.parse(
+        readFileSync(`${current_path_to_broadcast}/${chain}/run-latest.json`)
+      );
+    } catch (error) {
+      console.error(`Error reading broadcast file for chain ${chain}:`, error);
+      return;
+    }
     const transactionsCreate = broadCastObject.transactions.filter(
       (transaction) => transaction.transactionType == "CREATE"
     );
+
+    console.log(`Chain ${chain} transactions:`, transactionsCreate);
+
     transactionsCreate.forEach((transaction) => {
-      const artifact = getArtifactOfContract(transaction.contractName);
-      allGeneratedContracts[chain][
-        deployments[chain][transaction.contractAddress] ||
-          transaction.contractName
-      ] = {
-        address: transaction.contractAddress,
-        abi: artifact.abi,
-        inheritedFunctions: getInheritedFunctions(artifact),
-      };
+      console.log("Processing transaction:", transaction);
+      try {
+        const artifact = getArtifactOfContract(transaction.contractName);
+        const contractName =
+          deployments[chain] && deployments[chain][transaction.contractAddress]
+            ? deployments[chain][transaction.contractAddress]
+            : transaction.contractName;
+
+        allGeneratedContracts[chain][contractName] = {
+          address: transaction.contractAddress,
+          abi: artifact.abi,
+          inheritedFunctions: getInheritedFunctions(artifact),
+        };
+      } catch (error) {
+        console.error(
+          `Error processing transaction for ${transaction.contractName}:`,
+          error
+        );
+      }
     });
   });
+
+  console.log("All generated contracts:", allGeneratedContracts);
 
   const TARGET_DIR = "../nextjs/contracts/";
 
@@ -151,6 +184,6 @@ function main() {
 try {
   main();
 } catch (error) {
-  console.error(error);
+  console.error("Error in main function:", error);
   process.exitCode = 1;
 }
