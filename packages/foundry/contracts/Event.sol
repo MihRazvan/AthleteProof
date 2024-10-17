@@ -35,7 +35,7 @@ contract Event is Ownable {
         string memory _location,
         uint256 _maxParticipants,
         address _nftContractAddress
-    ) {
+    ) Ownable(msg.sender) {
         name = _name;
         date = _date;
         location = _location;
@@ -58,7 +58,7 @@ contract Event is Ownable {
 
     function uploadResults(
         address[] memory participants,
-        uint256[] memory _results
+        string[] memory _results
     ) public onlyOwner {
         if (resultsUploaded) revert ResultsAlreadyUploaded();
         if (participants.length != _results.length)
@@ -86,7 +86,9 @@ contract Event is Ownable {
         emit ResultsUploaded(msg.sender);
     }
 
-    function getResult(address participant) public view returns (uint256) {
+    function getResult(
+        address participant
+    ) public view returns (string memory) {
         if (!resultsUploaded) revert ResultsNotUploadedYet();
         if (!isRegistered[participant]) revert ParticipantNotRegistered();
         return results[participant];

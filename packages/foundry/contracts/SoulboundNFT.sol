@@ -55,34 +55,4 @@ contract SoulboundNFT is ERC721Enumerable {
     }
 
     // Override transfer functions to make the NFT soulbound
-    function transferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public virtual override {
-        if (from != address(0) || to != address(0))
-            revert SoulboundNFTTokenTransferNotAllowed();
-        super.transferFrom(from, to, tokenId);
-    }
-
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public virtual override {
-        if (from != address(0) || to != address(0))
-            revert SoulboundNFTTokenTransferNotAllowed();
-        super.safeTransferFrom(from, to, tokenId);
-    }
-
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 tokenId,
-        bytes memory _data
-    ) public virtual override {
-        if (from != address(0) || to != address(0))
-            revert SoulboundNFTTokenTransferNotAllowed();
-        super.safeTransferFrom(from, to, tokenId, _data);
-    }
 }

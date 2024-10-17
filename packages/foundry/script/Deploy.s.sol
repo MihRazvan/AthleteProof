@@ -2,15 +2,26 @@
 pragma solidity ^0.8.19;
 
 import "./DeployHelpers.s.sol";
-import { DeployYourContract } from "./DeployYourContract.s.sol";
+import {EventFactory} from "../contracts/EventFactory.sol";
+import {SoulboundNFT} from "../contracts/SoulboundNFT.sol";
+import {Event} from "../contracts/Event.sol";
 
 contract DeployScript is ScaffoldETHDeploy {
-  function run() external {
-    DeployYourContract deployYourContract = new DeployYourContract();
-    deployYourContract.run();
+    function run() external {
+        vm.startBroadcast();
+        SoulboundNFT nft = new SoulboundNFT();
+        EventFactory eventFactory = new EventFactory(address(nft));
+        Event firstEvent = new Event(
+            "dsadsa",
+            312331,
+            "dsadsadas",
+            2,
+            address(nft)
+        );
+        vm.stopBroadcast();
 
-    // deploy more contracts here
-    // DeployMyContract deployMyContract = new DeployMyContract();
-    // deployMyContract.run();
-  }
+        // deploy more contracts here
+        // DeployMyContract deployMyContract = new DeployMyContract();
+        // deployMyContract.run();
+    }
 }

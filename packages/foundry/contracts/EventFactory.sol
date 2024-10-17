@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
-import "./Event.sol";
+import {Event} from "./Event.sol";
 import "./SoulboundNFT.sol";
 
 contract EventFactory {
@@ -27,7 +27,7 @@ contract EventFactory {
         uint256 _date,
         string memory _location,
         uint256 _maxParticipants
-    ) public returns (address) {
+    ) public returns (Event) {
         if (_maxParticipants == 0) revert AddMoreParticipants();
         Event newEvent = new Event(
             _name,
@@ -46,14 +46,14 @@ contract EventFactory {
             _location,
             _maxParticipants
         );
-        return address(newEvent);
+        return newEvent;
     }
 
     function getEvents() public view returns (Event[] memory) {
         return events;
     }
 
-    function getEventAt(uint256 index) public view returns (Event memory) {
+    function getEventAt(uint256 index) public view returns (Event) {
         return events[index];
     }
 }
