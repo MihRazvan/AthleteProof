@@ -14,6 +14,7 @@ contract Event is Ownable {
 
     mapping(address => bool) public isRegistered;
     mapping(address => string) public results;
+    address[] public registeredAddresses;
 
     SoulboundNFT public nftContract;
 
@@ -51,6 +52,7 @@ contract Event is Ownable {
 
         if (nftContract.balanceOf(msg.sender) == 0) revert NoSouldBoundNFT();
         isRegistered[msg.sender] = true;
+        registeredAddresses.push(msg.sender);
         registeredParticipants++;
 
         emit ParticipantRegistered(msg.sender);
@@ -92,5 +94,13 @@ contract Event is Ownable {
         if (!resultsUploaded) revert ResultsNotUploadedYet();
         if (!isRegistered[participant]) revert ParticipantNotRegistered();
         return results[participant];
+    }
+
+    function getRegisteredParticipants()
+        public
+        view
+        returns (address[] memory)
+    {
+        return registeredAddresses;
     }
 }
