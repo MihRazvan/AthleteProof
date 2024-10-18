@@ -14,12 +14,12 @@ contract Event is Ownable {
 
     mapping(address => bool) public isRegistered;
     mapping(address => string) public results;
-    address[] public registeredAddresses;
 
     SoulboundNFT public nftContract;
 
     event ParticipantRegistered(address participant);
     event ResultsUploaded(address organizer);
+    event ResultAdded(uint256 tokenId, uint256 eventId, string result);
 
     error UserAlreadyRegistered();
     error MaxRegisteredParticipantsReached();
@@ -52,7 +52,6 @@ contract Event is Ownable {
 
         if (nftContract.balanceOf(msg.sender) == 0) revert NoSouldBoundNFT();
         isRegistered[msg.sender] = true;
-        registeredAddresses.push(msg.sender);
         registeredParticipants++;
 
         emit ParticipantRegistered(msg.sender);
@@ -61,23 +60,22 @@ contract Event is Ownable {
     function uploadResults(
         address[] memory participants,
         string[] memory _results
-    ) public {
+    ) public onlyOwner {
         if (resultsUploaded) revert ResultsAlreadyUploaded();
         if (participants.length != _results.length)
             revert MismatchInParticipansAndResults();
 
         for (uint i = 0; i < participants.length; i++) {
-            require(
-                isRegistered[participants[i]],
-                "Participant not registered"
-            );
+            if (!isRegistered[participants[i]])
+                revert ParticipantNotRegistered();
             results[participants[i]] = _results[i];
 
             uint256 tokenId = nftContract.tokenOfOwnerByIndex(
                 participants[i],
                 0
             );
-            nftContract.addEventResult(
+            // that will be caught by an off-chain service to update the metadata
+            emit ResultAdded(
                 tokenId,
                 uint256(uint160(address(this))),
                 _results[i]
@@ -96,11 +94,12 @@ contract Event is Ownable {
         return results[participant];
     }
 
-    function getRegisteredParticipants()
-        public
-        view
-        returns (address[] memory)
-    {
-        return registeredAddresses;
+    function getParticipantResultBlobId(
+        address participant
+    ) public view returns (string memory) {
+        if (!isRegistered[participant]) revert ParticipantNotRegistered();
+        if (!resultsUploaded) revert ResultsNotUploadedYet();
+        uint256 tokenId = nftContract.tokenOfOwnerByIndex(participant, 0);
+        return nftContract.tokenURI(tokenId);
     }
 }

@@ -2,22 +2,24 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract SoulboundNFT is ERC721Enumerable {
-    struct AthleteData {
-        uint256[] eventIds;
-        mapping(uint256 => string) eventResults; // eventId => result
-    }
+    // Mapping from token ID to Walrus blob ID
+    mapping(uint256 => string) private _tokenBlobIds;
 
-    mapping(uint256 => AthleteData) private _athleteData;
     uint256 private _tokenIdCounter;
+
+    string public baseWalrusURI;
 
     error TokenIdDoesNotExist();
     error SoulboundNFTTokenTransferNotAllowed();
     error NFTAlreadyMinted();
 
-    constructor() ERC721("AthleteProof", "APROOF") {}
+    event MetadataUpdated(uint256 indexed tokenId, string blobId);
+
+    constructor(string memory _baseWalrusURI) ERC721("AthleteProof", "APROOF") {
+        baseWalrusURI = _baseWalrusURI;
+    }
 
     modifier onlyExistingTokenId(uint256 tokenId) {
         if (ownerOf(tokenId) == address(0)) revert TokenIdDoesNotExist();
@@ -31,28 +33,33 @@ contract SoulboundNFT is ERC721Enumerable {
         return tokenId;
     }
 
-    function addEventResult(
+    function updateMetadata(
         uint256 tokenId,
-        uint256 eventId,
-        string memory result
-    ) public onlyExistingTokenId(tokenId) {
-        AthleteData storage data = _athleteData[tokenId];
-        data.eventIds.push(eventId);
-        data.eventResults[eventId] = result;
+        string memory newBlobId
+    ) external onlyExistingTokenId(tokenId) {
+        _tokenBlobIds[tokenId] = newBlobId;
+        emit MetadataUpdated(tokenId, newBlobId);
     }
 
-    function getAthleteEvents(
+    function getTokenBlobId(
         uint256 tokenId
-    ) public view onlyExistingTokenId(tokenId) returns (uint256[] memory) {
-        return _athleteData[tokenId].eventIds;
-    }
-
-    function getEventResult(
-        uint256 tokenId,
-        uint256 eventId
     ) public view onlyExistingTokenId(tokenId) returns (string memory) {
-        return _athleteData[tokenId].eventResults[eventId];
+        return _tokenBlobIds[tokenId];
     }
 
-    // Override transfer functions to make the NFT soulbound
+    function tokenURI(
+        uint256 tokenId
+    )
+        public
+        view
+        override
+        onlyExistingTokenId(tokenId)
+        returns (string memory)
+    {
+        string memory blobId = _tokenBlobIds[tokenId];
+        if (bytes(blobId).length == 0) {
+            return "";
+        }
+        return string(abi.encodePacked(baseWalrusURI, blobId));
+    }
 }

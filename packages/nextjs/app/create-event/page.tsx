@@ -1,4 +1,5 @@
 // app/create-event/page.tsx
+
 "use client";
 
 import { useState } from "react";
@@ -7,52 +8,59 @@ import { notification } from "~~/utils/scaffold-eth";
 
 // app/create-event/page.tsx
 
-// app/create-event/page.tsx
-
-// app/create-event/page.tsx
-
-// app/create-event/page.tsx
-
-// app/create-event/page.tsx
-
-// app/create-event/page.tsx
-
-// app/create-event/page.tsx
-
-// app/create-event/page.tsx
-
-// app/create-event/page.tsx
-
-// app/create-event/page.tsx
-
 const CreateEventPage = () => {
   const [eventName, setEventName] = useState("");
-  const [eventDescription, setEventDescription] = useState("");
+  const [eventLocation, setEventLocation] = useState("");
   const [eventDate, setEventDate] = useState("");
+  const [maxParticipants, setMaxParticipants] = useState("");
 
-  const { writeContract, isMining } = useScaffoldWriteContract("YourContractName");
+  // Interact with the EventFactory contract
+  const { writeContract, isMining } = useScaffoldWriteContract("EventFactory");
 
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!eventName || !eventDescription || !eventDate) {
+    if (!eventName || !eventLocation || !eventDate || !maxParticipants) {
       notification.error("Please fill in all fields.");
       return;
     }
 
     try {
-      await writeContract({
-        functionName: "createEvent",
-        args: [eventName, eventDescription, BigInt(new Date(eventDate).getTime())],
+      // Convert date to Unix timestamp in seconds
+      const eventTimestamp = eventDate;
+
+      const participantsCount = parseInt(maxParticipants, 10);
+
+      if (participantsCount === 0) {
+        notification.error("Max participants must be greater than 0.");
+        return;
+      }
+
+      console.log("Attempting to create event with args:", {
+        eventName,
+        eventTimestamp, // Using timestamp as an integer in seconds
+        eventLocation,
+        participantsCount,
       });
+
+      // Call the createEvent function from the EventFactory contract
+      const txResponse = await writeContract({
+        functionName: "createEvent",
+        args: [eventName, BigInt(eventTimestamp), eventLocation, BigInt(participantsCount)],
+      });
+
+      console.log("Transaction Response:", txResponse);
+
       notification.success("Event created successfully!");
-      // Optionally, reset form fields
+
+      // Optionally, reset form fields after successful event creation
       setEventName("");
-      setEventDescription("");
+      setEventLocation("");
       setEventDate("");
+      setMaxParticipants("");
     } catch (error) {
       notification.error("Failed to create event.");
-      console.error(error);
+      console.error("Error during contract call:", error);
     }
   };
 
@@ -70,19 +78,29 @@ const CreateEventPage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium">Event Description</label>
-          <textarea
-            value={eventDescription}
-            onChange={e => setEventDescription(e.target.value)}
-            className="textarea textarea-bordered w-full"
-          ></textarea>
+          <label className="block text-sm font-medium">Event Location</label>
+          <input
+            type="text"
+            value={eventLocation}
+            onChange={e => setEventLocation(e.target.value)}
+            className="input input-bordered w-full"
+          />
         </div>
         <div>
           <label className="block text-sm font-medium">Event Date</label>
           <input
-            type="datetime-local"
+            type="number"
             value={eventDate}
             onChange={e => setEventDate(e.target.value)}
+            className="input input-bordered w-full"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium">Max Participants</label>
+          <input
+            type="number"
+            value={maxParticipants}
+            onChange={e => setMaxParticipants(e.target.value)}
             className="input input-bordered w-full"
           />
         </div>
