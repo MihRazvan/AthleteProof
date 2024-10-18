@@ -693,6 +693,50 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "eventDetails",
+          inputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "eventAddress",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "name",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "date",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "location",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "maxParticipants",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "registeredParticipants",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
           name: "events",
           inputs: [
             {
@@ -736,8 +780,40 @@ const deployedContracts = {
           outputs: [
             {
               name: "",
-              type: "address[]",
-              internalType: "contract Event[]",
+              type: "tuple[]",
+              internalType: "struct EventFactory.EventInfo[]",
+              components: [
+                {
+                  name: "eventAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "name",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "date",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "location",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "maxParticipants",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "registeredParticipants",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+              ],
             },
           ],
           stateMutability: "view",
@@ -843,6 +919,19 @@ const deployedContracts = {
               name: "",
               type: "uint256",
               internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getRegisteredParticipants",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address[]",
+              internalType: "address[]",
             },
           ],
           stateMutability: "view",
@@ -956,6 +1045,25 @@ const deployedContracts = {
           inputs: [],
           outputs: [],
           stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "registeredAddresses",
+          inputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          stateMutability: "view",
         },
         {
           type: "function",
@@ -1148,16 +1256,12 @@ const deployedContracts = {
           inputs: [],
         },
       ],
-      inheritedFunctions: {
-        owner: "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
-        renounceOwnership: "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
-        transferOwnership: "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
-      },
+      inheritedFunctions: {},
     },
   },
   11155111: {
     SoulboundNFT: {
-      address: "0xcd0bae06cc027dd149f60b10027c05d6cdb327a6",
+      address: "0x5664df5ee1d72b6d35886684c6be4a263550b218",
       abi: [
         {
           type: "constructor",
@@ -1794,7 +1898,7 @@ const deployedContracts = {
       },
     },
     EventFactory: {
-      address: "0x56cef6de38e6b50c4b97d4ab98afc33359b47a36",
+      address: "0xf03329d2ae10ac85aa7be8dfc200d49bfd7a3bc8",
       abi: [
         {
           type: "constructor",
@@ -1843,6 +1947,50 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "eventDetails",
+          inputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "eventAddress",
+              type: "address",
+              internalType: "address",
+            },
+            {
+              name: "name",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "date",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "location",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "maxParticipants",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "registeredParticipants",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
           name: "events",
           inputs: [
             {
@@ -1886,8 +2034,40 @@ const deployedContracts = {
           outputs: [
             {
               name: "",
-              type: "address[]",
-              internalType: "contract Event[]",
+              type: "tuple[]",
+              internalType: "struct EventFactory.EventInfo[]",
+              components: [
+                {
+                  name: "eventAddress",
+                  type: "address",
+                  internalType: "address",
+                },
+                {
+                  name: "name",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "date",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "location",
+                  type: "string",
+                  internalType: "string",
+                },
+                {
+                  name: "maxParticipants",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+                {
+                  name: "registeredParticipants",
+                  type: "uint256",
+                  internalType: "uint256",
+                },
+              ],
             },
           ],
           stateMutability: "view",
@@ -1949,360 +2129,6 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-    },
-    Event: {
-      address: "0x59b577a576d88cb33408b86fcdee02e236430f94",
-      abi: [
-        {
-          type: "constructor",
-          inputs: [
-            {
-              name: "_name",
-              type: "string",
-              internalType: "string",
-            },
-            {
-              name: "_date",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "_location",
-              type: "string",
-              internalType: "string",
-            },
-            {
-              name: "_maxParticipants",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "_nftContractAddress",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "date",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "getResult",
-          inputs: [
-            {
-              name: "participant",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "string",
-              internalType: "string",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "isRegistered",
-          inputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "location",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "string",
-              internalType: "string",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "maxParticipants",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "name",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "string",
-              internalType: "string",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "nftContract",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "contract SoulboundNFT",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "owner",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "register",
-          inputs: [],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "registeredParticipants",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "renounceOwnership",
-          inputs: [],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "results",
-          inputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "string",
-              internalType: "string",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "resultsUploaded",
-          inputs: [],
-          outputs: [
-            {
-              name: "",
-              type: "bool",
-              internalType: "bool",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "transferOwnership",
-          inputs: [
-            {
-              name: "newOwner",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "uploadResults",
-          inputs: [
-            {
-              name: "participants",
-              type: "address[]",
-              internalType: "address[]",
-            },
-            {
-              name: "_results",
-              type: "string[]",
-              internalType: "string[]",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "event",
-          name: "OwnershipTransferred",
-          inputs: [
-            {
-              name: "previousOwner",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-            {
-              name: "newOwner",
-              type: "address",
-              indexed: true,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "ParticipantRegistered",
-          inputs: [
-            {
-              name: "participant",
-              type: "address",
-              indexed: false,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "event",
-          name: "ResultsUploaded",
-          inputs: [
-            {
-              name: "organizer",
-              type: "address",
-              indexed: false,
-              internalType: "address",
-            },
-          ],
-          anonymous: false,
-        },
-        {
-          type: "error",
-          name: "MaxRegisteredParticipantsReached",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "MismatchInParticipansAndResults",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "NoSouldBoundNFT",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "OwnableInvalidOwner",
-          inputs: [
-            {
-              name: "owner",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "OwnableUnauthorizedAccount",
-          inputs: [
-            {
-              name: "account",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-        },
-        {
-          type: "error",
-          name: "ParticipantNotRegistered",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "RegisterPeriodExpired",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "ResultsAlreadyUploaded",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "ResultsNotUploadedYet",
-          inputs: [],
-        },
-        {
-          type: "error",
-          name: "UserAlreadyRegistered",
-          inputs: [],
-        },
-      ],
-      inheritedFunctions: {
-        owner: "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
-        renounceOwnership: "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
-        transferOwnership: "lib/openzeppelin-contracts/contracts/access/Ownable.sol",
-      },
     },
   },
 } as const;
