@@ -1,10 +1,11 @@
+
+
 "use client";
 
 import { useState } from "react";
 import { notification } from "~~/utils/scaffold-eth";
 import { IExecDataProtectorCore } from '@iexec/dataprotector'; // Correct import for DataProtector
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth"; // Hook for interacting with contracts
-import { IExecWeb3mail } from "@iexec/web3mail"; // Import Web3Mail
 
 const RegisterPage = () => {
   const [email, setEmail] = useState("");
@@ -13,59 +14,122 @@ const RegisterPage = () => {
 
   const { writeContract } = useScaffoldWriteContract("SoulboundNFT");
 
-  // Initialize Web3Mail
-  const web3mail = new IExecWeb3mail();
+  // iExec Sidechain configuration
+  const iExecSidechain = {
+    chainId: "0x86", // 134 in decimal
+    chainName: "iExec Sidechain",
+    rpcUrls: ["https://bellecour.iex.ec"], // iExec Bellecour sidechain RPC
+    blockExplorerUrls: ["https://blockscout-bellecour.iex.ec/"],
+    nativeCurrency: {
+      name: "xRLC",
+      symbol: "xRLC",
+      decimals: 18,
+    },
+  };
+
+  // Function to switch to iExec sidechain
+  const switchToIExecSidechain = async () => {
+    if (window.ethereum) {
+      try {
+        // Try to switch to iExec sidechain
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: iExecSidechain.chainId }],
+        });
+        notification.success("Switched to iExec sidechain");
+      } catch (error: any) {
+        // If the sidechain is not added, request to add it
+        if (error.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [iExecSidechain],
+            });
+            notification.success("iExec sidechain added and switched");
+          } catch (addError: any) {
+            notification.error(`Failed to add iExec sidechain: ${addError.message}`);
+          }
+        } else {
+          notification.error(`Failed to switch to iExec sidechain: ${error.message}`);
+        }
+      }
+    } else {
+      notification.error("Ethereum wallet not detected");
+    }
+  };
 
   const handleRegister = async () => {
     setIsMinting(true);
 
     try {
+      // Switch to iExec sidechain before proceeding
+      await switchToIExecSidechain();
+
+      if (!window.ethereum) {
+        throw new Error("No wallet detected. Please check wallet connection.");
+      }
+
+      // Get the connected signer
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      const address = accounts[0];
+
       // Mint the SoulboundNFT for the current user's Ethereum address
       await writeContract({
         functionName: "mint",
-        args: [window.ethereum.selectedAddress], // Using the currently connected address
+        args: [address], // Using the currently connected address
       });
 
       notification.success("Soulbound NFT minted successfully!");
 
       // Proceed to give Web3Mail permission
-      await giveWeb3MailPermission();
-    } catch (error) {
-      notification.error("Failed to mint Soulbound NFT.");
-      console.error(error);
+      await giveWeb3MailPermission(address);
+    } catch (error: any) {
+      notification.error(`Failed to mint Soulbound NFT: ${error.message}`);
+      console.error(error.message);
     }
 
     setIsMinting(false);
   };
 
   // Function to give permission to the organizer to send emails
-  const giveWeb3MailPermission = async () => {
+  const giveWeb3MailPermission = async (address: string) => {
+    address
     setIsGivingPermission(true);
 
     try {
+      if (!window.ethereum) {
+        throw new Error("No wallet detected. Please check wallet connection.");
+      }
+
       // Protect the user's email address using iExec Data Protector
       const dataProtector = new IExecDataProtectorCore(window.ethereum);
-      const protectedData = await dataProtector.protectData({
+      await dataProtector.protectData({
         name: "event_registration_email",
         data: { email },
       });
 
       notification.success("Email encrypted and stored successfully!");
 
-      // Now we can send a welcome email or similar via Web3Mail
-      await web3mail.sendEmail({
-        protectedData: protectedData.address, // Address of the protected data
-        emailSubject: "You've opted in for Event Emails",
-        emailContent: `
-          <h1>Welcome to the Event Platform</h1>
-          <p>You have successfully registered to receive email updates.</p>
-        `,
-      });
+      // Initialize Web3Mail using the same provider
 
-      notification.success("Confirmation email sent to your address!");
-    } catch (error) {
-      notification.error("Failed to give email permission.");
-      console.error(error);
+
+      // // Now we can send a welcome email or similar via Web3Mail
+      // await web3mail.sendEmail({
+      //   protectedData: protectedData.address, // Address of the protected data
+      //   emailSubject: "You've opted in for Event Emails",
+      //   emailContent: `
+      //     <h1>Welcome to the Event Platform</h1>
+      //     <p>You have successfully registered to receive email updates.</p>
+      //   `,
+      // });
+
+      // notification.success("Confirmation email sent to your address!");
+
+      // Redirect to the dashboard after successful registration
+      window.location.href = "/dashboard";
+    } catch (error: any) {
+      notification.error(`Failed to give email permission: ${error.message}`);
+      console.error(error.message);
     }
 
     setIsGivingPermission(false);
