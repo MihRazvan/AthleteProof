@@ -2,3 +2,4 @@
 app/create-event/page.tsx
 app/dashboard/page.tsx
 app/register/page.tsx
+app/upload-results/page.tsx
