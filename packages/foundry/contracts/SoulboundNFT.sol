@@ -62,4 +62,8 @@ contract SoulboundNFT is ERC721Enumerable {
         }
         return string(abi.encodePacked(baseWalrusURI, blobId));
     }
+
+    function getTokenIdByAddress(address user) public view returns (uint256) {
+        return tokenOfOwnerByIndex(user, 0);
+    }
 }

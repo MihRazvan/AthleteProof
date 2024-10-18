@@ -1,66 +1,90 @@
-// app/create-event/page.tsx
-
 "use client";
 
 import { useState } from "react";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
-
-// app/create-event/page.tsx
+import { IExecWeb3mail } from "@iexec/web3mail";
 
 const CreateEventPage = () => {
   const [eventName, setEventName] = useState("");
   const [eventLocation, setEventLocation] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [maxParticipants, setMaxParticipants] = useState("");
+  const [isCreatingEvent, setIsCreatingEvent] = useState(false);
 
-  // Interact with the EventFactory contract
-  const { writeContract, isMining } = useScaffoldWriteContract("EventFactory");
+  const { writeContract } = useScaffoldWriteContract("EventFactory");
+  const web3mail = new IExecWeb3mail(window.ethereum);
 
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!eventName || !eventLocation || !eventDate || !maxParticipants) {
-      notification.error("Please fill in all fields.");
-      return;
-    }
+    setIsCreatingEvent(true);
 
     try {
-      // Convert date to Unix timestamp in seconds
-      const eventTimestamp = eventDate;
+      if (!eventName || !eventLocation || !eventDate || !maxParticipants) {
+        notification.error("Please fill in all fields.");
+        return;
+      }
 
+      const eventTimestamp = eventDate;
       const participantsCount = parseInt(maxParticipants, 10);
 
-      if (participantsCount === 0) {
+      if (participantsCount <= 0) {
         notification.error("Max participants must be greater than 0.");
         return;
       }
 
-      console.log("Attempting to create event with args:", {
+      console.log("Creating event with args:", {
         eventName,
-        eventTimestamp, // Using timestamp as an integer in seconds
+        eventTimestamp,
         eventLocation,
         participantsCount,
       });
 
-      // Call the createEvent function from the EventFactory contract
       const txResponse = await writeContract({
         functionName: "createEvent",
         args: [eventName, BigInt(eventTimestamp), eventLocation, BigInt(participantsCount)],
       });
 
-      console.log("Transaction Response:", txResponse);
-
+      console.log("Event created successfully:", txResponse);
       notification.success("Event created successfully!");
 
-      // Optionally, reset form fields after successful event creation
+      // Send email notification via Web3Mail to all opted-in users
+      await sendEmailNotification();
+
+      // Reset form
       setEventName("");
       setEventLocation("");
       setEventDate("");
       setMaxParticipants("");
     } catch (error) {
+      console.error("Error creating event:", error);
       notification.error("Failed to create event.");
-      console.error("Error during contract call:", error);
+    }
+
+    setIsCreatingEvent(false);
+  };
+
+  // Function to send email notifications via Web3Mail
+  const sendEmailNotification = async () => {
+    try {
+      const emailContent = `
+        <h1>New Event Created: ${eventName}</h1>
+        <p>Date: ${eventDate}</p>
+        <p>Location: ${eventLocation}</p>
+        <p>Max Participants: ${maxParticipants}</p>
+      `;
+
+      await web3mail.sendEmail({
+        protectedData: "razvan.mihailescu1996@gmail.com", // Hardcoded email address for testing
+        emailSubject: `New Event: ${eventName}`,
+        emailContent,
+        contentType: "text/html",
+      });
+
+      notification.success("Emails sent to participants!");
+    } catch (error) {
+      notification.error("Failed to send email notifications.");
+      console.error(error);
     }
   };
 
@@ -73,7 +97,7 @@ const CreateEventPage = () => {
           <input
             type="text"
             value={eventName}
-            onChange={e => setEventName(e.target.value)}
+            onChange={(e) => setEventName(e.target.value)}
             className="input input-bordered w-full"
           />
         </div>
@@ -82,7 +106,7 @@ const CreateEventPage = () => {
           <input
             type="text"
             value={eventLocation}
-            onChange={e => setEventLocation(e.target.value)}
+            onChange={(e) => setEventLocation(e.target.value)}
             className="input input-bordered w-full"
           />
         </div>
@@ -91,7 +115,7 @@ const CreateEventPage = () => {
           <input
             type="number"
             value={eventDate}
-            onChange={e => setEventDate(e.target.value)}
+            onChange={(e) => setEventDate(e.target.value)}
             className="input input-bordered w-full"
           />
         </div>
@@ -100,12 +124,12 @@ const CreateEventPage = () => {
           <input
             type="number"
             value={maxParticipants}
-            onChange={e => setMaxParticipants(e.target.value)}
+            onChange={(e) => setMaxParticipants(e.target.value)}
             className="input input-bordered w-full"
           />
         </div>
-        <button type="submit" className="btn btn-primary" disabled={isMining}>
-          {isMining ? "Creating..." : "Create Event"}
+        <button type="submit" className="btn btn-primary" disabled={isCreatingEvent}>
+          {isCreatingEvent ? "Creating..." : "Create Event"}
         </button>
       </form>
     </div>
