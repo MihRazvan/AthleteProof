@@ -2,111 +2,31 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* Global Theme Variables */
 :root,
 [data-theme] {
-  --primary-color: #34d399;
-  /* Vibrant green, symbolizes energy and health */
-  --secondary-color: #0284c7;
-  /* A dynamic blue for contrast */
-  --accent-color: #f97316;
-  /* Orange accent for action elements */
-  --background-color: #f3f4f6;
-  /* Light background */
-  --text-color: #1f2937;
-  /* Dark text for contrast */
-  background: var(--background-color);
-  color: var(--text-color);
+  background: oklch(var(--b2));
 }
 
 body {
-  font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  background: var(--background-color);
-  line-height: 1.6;
 }
 
-/* Heading Styles */
 h1,
 h2,
 h3,
 h4 {
   margin-bottom: 0.5rem;
-  line-height: 1.2;
-  color: var(--text-color);
-}
-
-h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: var(--primary-color);
-}
-
-h2 {
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-h3 {
-  font-size: 1.5rem;
-  font-weight: bold;
+  line-height: 1;
 }
 
 p {
   margin: 1rem 0;
-  color: var(--text-color);
 }
 
-/* Button Styles */
 .btn {
-  @apply shadow-md transition-all duration-300 ease-in-out;
-  background-color: var(--primary-color);
-  color: white;
-  font-weight: bold;
-}
-
-.btn:hover {
-  background-color: var(--accent-color);
-  transform: translateY(-2px);
-}
-
-.btn.btn-secondary {
-  background-color: var(--secondary-color);
-  color: white;
+  @apply shadow-md;
 }
 
 .btn.btn-ghost {
   @apply shadow-none;
-  background: transparent;
-  color: var(--text-color);
-}
-
-/* Card Styles */
-.card {
-  @apply bg-white shadow-lg rounded-lg p-6 border border-gray-200;
-  transition: transform 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-/* Form Input Styling */
-.input {
-  @apply w-full p-3 border border-gray-300 rounded-lg;
-  transition: border-color 0.2s;
-}
-
-.input:focus {
-  @apply outline-none;
-  border-color: var(--primary-color);
-}
-
-.container {
-  @apply mx-auto p-4 max-w-5xl;
-}
-
-.section-title {
-  color: var(--primary-color);
-  @apply text-2xl font-bold;
 }
