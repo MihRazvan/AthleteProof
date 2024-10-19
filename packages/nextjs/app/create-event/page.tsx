@@ -6,12 +6,10 @@ import { useState } from "react";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
-// app/create-event/page.tsx
-
 const CreateEventPage = () => {
   const [eventName, setEventName] = useState("");
   const [eventLocation, setEventLocation] = useState("");
-  const [eventDate, setEventDate] = useState("");
+  const [eventDateTime, setEventDateTime] = useState(""); // Updated state variable name
   const [maxParticipants, setMaxParticipants] = useState("");
 
   // Interact with the EventFactory contract
@@ -20,14 +18,14 @@ const CreateEventPage = () => {
   const handleCreateEvent = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!eventName || !eventLocation || !eventDate || !maxParticipants) {
+    if (!eventName || !eventLocation || !eventDateTime || !maxParticipants) {
       notification.error("Please fill in all fields.");
       return;
     }
 
     try {
-      // Convert date to Unix timestamp in seconds
-      const eventTimestamp = eventDate;
+      // Convert date and time to Unix timestamp in seconds
+      const eventTimestamp = new Date(eventDateTime).getTime() / 1000;
 
       const participantsCount = parseInt(maxParticipants, 10);
 
@@ -56,7 +54,7 @@ const CreateEventPage = () => {
       // Optionally, reset form fields after successful event creation
       setEventName("");
       setEventLocation("");
-      setEventDate("");
+      setEventDateTime(""); // Resetting the updated state variable
       setMaxParticipants("");
     } catch (error) {
       notification.error("Failed to create event.");
@@ -87,12 +85,14 @@ const CreateEventPage = () => {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium">Event Date</label>
+          <label className="block text-sm font-medium">Event Date & Time</label>
           <input
-            type="number"
-            value={eventDate}
-            onChange={e => setEventDate(e.target.value)}
+            type="datetime-local" // Changed input type
+            value={eventDateTime} // Updated variable name
+            onChange={e => setEventDateTime(e.target.value)} // Updated handler
             className="input input-bordered w-full"
+            min="1900-01-01T00:00"
+            max="2099-12-31T23:59"
           />
         </div>
         <div>
