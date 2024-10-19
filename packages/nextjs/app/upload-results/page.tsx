@@ -1,10 +1,9 @@
-// app/upload-results/page.tsx
-
 "use client";
 
 import { useState } from "react";
-import { useDeployedContractInfo } from "~~/hooks/scaffold-eth";
+import { ethers } from "ethers";
 import { notification } from "~~/utils/scaffold-eth";
+import EventABI from "~~/contracts/Event.json"; // Adjust the import path
 
 const UploadResultsPage = () => {
     const [eventAddress, setEventAddress] = useState("");
@@ -12,9 +11,8 @@ const UploadResultsPage = () => {
     const [results, setResults] = useState([""]);
     const [isUploading, setIsUploading] = useState(false);
 
-    // Hooks should be called at the top level
-    const { data: eventContractInfo } = useDeployedContractInfo("EventFactory");
-    // const { writeContract } = useScaffoldWriteContract("EventFactory");
+    // Cast ABI to any to prevent TypeScript issues
+    const eventAbi = EventABI as any;
 
     // Function to add a new participant input field
     const handleAddParticipant = () => {
@@ -45,7 +43,6 @@ const UploadResultsPage = () => {
             return;
         }
 
-        // Ensure that the number of participants matches the number of results
         if (participants.length !== results.length) {
             notification.error("The number of participants must match the number of results.");
             return;
@@ -54,23 +51,21 @@ const UploadResultsPage = () => {
         setIsUploading(true);
 
         try {
-            if (!eventContractInfo) {
-                notification.error("Event contract ABI not found.");
-                setIsUploading(false);
-                return;
-            }
+            // Create ethers.js provider using the injected web3 provider (MetaMask)
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
 
-            // Call the `uploadResults` function on the specific event contract
-            // const txResponse = await writeContract({
-            //     functionName: "uploadResults",
-            //     args: [participants, results],
-            //     address: eventAddress,
-            // });
+            // Create an instance of the Event contract
+            const eventContract = new ethers.Contract(eventAddress, eventAbi, signer);
 
-            console.log("Transaction Response:");
+            // Call the `uploadResults` function on the Event contract
+            const txResponse = await eventContract.uploadResults(participants, results);
+            await txResponse.wait();
+
             notification.success("Results uploaded successfully!");
         } catch (error) {
-            notification.success("Results uploaded successfully!");
+            notification.error("Failed to upload results.");
+            console.error(error);
         } finally {
             setIsUploading(false);
         }

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 
-// Define the type for EventInfo as it is returned from the EventFactory
 interface EventInfo {
   eventAddress: string;
   name: string;
@@ -24,18 +23,16 @@ const hardcodedEvent: EventInfo = {
 };
 
 const DashboardPage = () => {
-  const [events, setEvents] = useState<EventInfo[]>([hardcodedEvent]); // Initialize with the hardcoded event
+  const [events, setEvents] = useState<EventInfo[]>([hardcodedEvent]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true);
-  const [isRegistering, setIsRegistering] = useState(false); // State to track registration
-  const [registered, setRegistered] = useState(false); // Track if the user has registered for the hardcoded event
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [registered, setRegistered] = useState(false);
 
-  // Fetch all events from the EventFactory contract
   const { data: eventsList, error } = useScaffoldReadContract({
     contractName: "EventFactory",
     functionName: "getEvents",
   });
 
-  // Log the fetched data or errors to help debug
   useEffect(() => {
     console.log("Events List Fetched:", eventsList);
     if (error) {
@@ -43,13 +40,11 @@ const DashboardPage = () => {
     }
   }, [eventsList, error]);
 
-  // Fetch events when the component mounts
   useEffect(() => {
     const loadEvents = async () => {
       try {
         if (eventsList && Array.isArray(eventsList)) {
-          console.log("Events data:", eventsList); // Log the eventsList to check if it's populated
-          setEvents([hardcodedEvent, ...eventsList]); // Set the eventsList with the hardcoded event at the start
+          setEvents([hardcodedEvent, ...eventsList]);
         } else {
           console.log("No events found or data is not an array.");
         }
@@ -61,17 +56,13 @@ const DashboardPage = () => {
       }
     };
     loadEvents();
-  }, [eventsList]); // Trigger useEffect when eventsList changes
+  }, [eventsList]);
 
   const handleRegister = () => {
     setIsRegistering(true);
-
-    // Simulate registration delay and success
     setTimeout(() => {
       setRegistered(true);
       setIsRegistering(false);
-
-      // Increment registeredParticipants in the hardcoded event
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event.eventAddress === hardcodedEvent.eventAddress
@@ -79,67 +70,49 @@ const DashboardPage = () => {
             : event
         )
       );
-
       notification.success("Successfully registered for the event!");
-    }, 2000); // Simulate a 2-second registration process
+    }, 2000);
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Event Dashboard</h1>
-
+    <div className="container mx-auto p-6 bg-white rounded-lg shadow-md max-w-5xl fade-in">
+      <h1 className="text-3xl font-bold mb-6 text-center">Event Dashboard</h1>
       {isLoadingEvents ? (
         <p>Loading events...</p>
       ) : (
         <>
-          <section>
-            <h2 className="text-xl font-bold mb-2">Featured Event</h2>
-            <ul>
-              <li className="border p-4 mb-2">
-                <h3 className="text-lg font-semibold">{hardcodedEvent.name}</h3>
-                <p>Date: {new Date(Number(hardcodedEvent.date) * 1000).toLocaleDateString()}</p>
-                <p>Location: {hardcodedEvent.location}</p>
-                <p>Max Participants: {hardcodedEvent.maxParticipants.toString()}</p>
-                <p>
-                  Registered Participants:{" "}
-                  {
-                    events.find((event) => event.eventAddress === hardcodedEvent.eventAddress)
-                      ?.registeredParticipants
-                  }
-                </p>
-
-                {registered ? (
-                  <p className="text-green-600 font-semibold">You have registered for this event!</p>
-                ) : (
-                  <button
-                    className="btn btn-primary"
-                    onClick={handleRegister}
-                    disabled={isRegistering}
-                  >
-                    {isRegistering ? "Registering..." : "Register"}
-                  </button>
-                )}
-              </li>
-            </ul>
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Featured Event</h2>
+            <div className="card">
+              <h3 className="card-title">{hardcodedEvent.name}</h3>
+              <p>Date: 2024</p>
+              <p>Location: Sofia</p>
+              <p>Max Participants: 100</p>
+              <p>Registered Participants: 0</p>
+              {registered ? (
+                <p className="text-green-600 font-semibold">You have registered for this event!</p>
+              ) : (
+                <button
+                  className="btn btn-primary w-full"
+                  onClick={handleRegister}
+                  disabled={isRegistering}>
+                  {isRegistering ? "Registering..." : "Register"}
+                </button>
+              )}
+            </div>
           </section>
-
-          {/* Other Events Section */}
           <section>
-            <h2 className="text-xl font-bold mb-2">All Events</h2>
+            <h2 className="text-2xl font-semibold mb-4">All Events</h2>
             {events.length > 1 ? (
-              <ul>
+              <ul className="space-y-4">
                 {events.slice(1).map((event, index) => (
-                  <li key={index} className="border p-4 mb-2">
-                    <h3 className="text-lg font-semibold">{event.name}</h3>
+                  <li key={index} className="card">
+                    <h3 className="card-title">{event.name}</h3>
                     <p>Date: {new Date(Number(event.date) * 1000).toLocaleDateString()}</p>
                     <p>Location: {event.location}</p>
-                    <p>Max Participants: {event.maxParticipants.toString()}</p>
-                    <p>Registered Participants: {event.registeredParticipants.toString()}</p>
-
-                    {/* Disabled Registration Button for other events */}
-                    <button className="btn btn-primary">
-                      Register
-                    </button>
+                    <p>Max Participants: {event.maxParticipants}</p>
+                    <p>Registered Participants: {event.registeredParticipants}</p>
+                    <button className="btn btn-secondary w-full">Register</button>
                   </li>
                 ))}
               </ul>
