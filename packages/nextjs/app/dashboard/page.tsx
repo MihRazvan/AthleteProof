@@ -1,5 +1,3 @@
-// app/dashboard/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -17,12 +15,12 @@ interface EventInfo {
 }
 
 const hardcodedEvent: EventInfo = {
-  eventAddress: "0x1234567890abcdef1234567890abcdef12345678", // Fake contract address
-  name: "Hardcoded Marathon Event",
-  date: "2024", // Current timestamp in seconds (Unix time)
-  location: "New York",
+  eventAddress: "0xa15bb66138824a1c7167f5e85b957d04dd34e468",
+  name: "Marathon Event",
+  date: "2024",
+  location: "Sofia",
   maxParticipants: 100,
-  registeredParticipants: 50,
+  registeredParticipants: 0,
 };
 
 const DashboardPage = () => {
@@ -72,7 +70,17 @@ const DashboardPage = () => {
     setTimeout(() => {
       setRegistered(true);
       setIsRegistering(false);
-      notification.success("Successfully registered for the hardcoded event!");
+
+      // Increment registeredParticipants in the hardcoded event
+      setEvents((prevEvents) =>
+        prevEvents.map((event) =>
+          event.eventAddress === hardcodedEvent.eventAddress
+            ? { ...event, registeredParticipants: event.registeredParticipants + 1 }
+            : event
+        )
+      );
+
+      notification.success("Successfully registered for the event!");
     }, 2000); // Simulate a 2-second registration process
   };
 
@@ -92,7 +100,13 @@ const DashboardPage = () => {
                 <p>Date: {new Date(Number(hardcodedEvent.date) * 1000).toLocaleDateString()}</p>
                 <p>Location: {hardcodedEvent.location}</p>
                 <p>Max Participants: {hardcodedEvent.maxParticipants.toString()}</p>
-                <p>Registered Participants: {hardcodedEvent.registeredParticipants.toString()}</p>
+                <p>
+                  Registered Participants:{" "}
+                  {
+                    events.find((event) => event.eventAddress === hardcodedEvent.eventAddress)
+                      ?.registeredParticipants
+                  }
+                </p>
 
                 {registered ? (
                   <p className="text-green-600 font-semibold">You have registered for this event!</p>

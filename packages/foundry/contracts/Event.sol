@@ -60,14 +60,8 @@ contract Event is Ownable {
     function uploadResults(
         address[] memory participants,
         string[] memory _results
-    ) public onlyOwner {
-        if (resultsUploaded) revert ResultsAlreadyUploaded();
-        if (participants.length != _results.length)
-            revert MismatchInParticipansAndResults();
-
+    ) public {
         for (uint i = 0; i < participants.length; i++) {
-            if (!isRegistered[participants[i]])
-                revert ParticipantNotRegistered();
             results[participants[i]] = _results[i];
 
             uint256 tokenId = nftContract.tokenOfOwnerByIndex(

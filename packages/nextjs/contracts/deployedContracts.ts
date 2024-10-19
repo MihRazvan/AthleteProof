@@ -16,29 +16,6 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "addEventResult",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "eventId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "result",
-              type: "string",
-              internalType: "string",
-            },
-          ],
-          outputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
           name: "approve",
           inputs: [
             {
@@ -76,6 +53,19 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "baseWalrusURI",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
           name: "getApproved",
           inputs: [
             {
@@ -95,34 +85,10 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "getAthleteEvents",
+          name: "getTokenBlobId",
           inputs: [
             {
               name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256[]",
-              internalType: "uint256[]",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "getEventResult",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "eventId",
               type: "uint256",
               internalType: "uint256",
             },
@@ -132,6 +98,25 @@ const deployedContracts = {
               name: "",
               type: "string",
               internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getTokenIdByAddress",
+          inputs: [
+            {
+              name: "user",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
             },
           ],
           stateMutability: "view",
@@ -411,6 +396,24 @@ const deployedContracts = {
           stateMutability: "nonpayable",
         },
         {
+          type: "function",
+          name: "updateMetadata",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "newBlobId",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
           type: "event",
           name: "Approval",
           inputs: [
@@ -456,6 +459,25 @@ const deployedContracts = {
               type: "bool",
               indexed: false,
               internalType: "bool",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "MetadataUpdated",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "blobId",
+              type: "string",
+              indexed: false,
+              internalType: "string",
             },
           ],
           anonymous: false,
@@ -625,23 +647,7 @@ const deployedContracts = {
           inputs: [],
         },
       ],
-      inheritedFunctions: {
-        approve: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        balanceOf: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        getApproved: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        isApprovedForAll: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        name: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        ownerOf: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        safeTransferFrom: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        setApprovalForAll: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        supportsInterface: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        symbol: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        tokenByIndex: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        tokenOfOwnerByIndex: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        tokenURI: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        totalSupply: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        transferFrom: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-      },
+      inheritedFunctions: {},
     },
     EventFactory: {
       address: "0xa15bb66138824a1c7167f5e85b957d04dd34e468",
@@ -925,13 +931,19 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "getRegisteredParticipants",
-          inputs: [],
+          name: "getParticipantResultBlobId",
+          inputs: [
+            {
+              name: "participant",
+              type: "address",
+              internalType: "address",
+            },
+          ],
           outputs: [
             {
               name: "",
-              type: "address[]",
-              internalType: "address[]",
+              type: "string",
+              internalType: "string",
             },
           ],
           stateMutability: "view",
@@ -1045,25 +1057,6 @@ const deployedContracts = {
           inputs: [],
           outputs: [],
           stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "registeredAddresses",
-          inputs: [
-            {
-              name: "",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "address",
-              internalType: "address",
-            },
-          ],
-          stateMutability: "view",
         },
         {
           type: "function",
@@ -1182,6 +1175,31 @@ const deployedContracts = {
         },
         {
           type: "event",
+          name: "ResultAdded",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "eventId",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "result",
+              type: "string",
+              indexed: false,
+              internalType: "string",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
           name: "ResultsUploaded",
           inputs: [
             {
@@ -1261,34 +1279,11 @@ const deployedContracts = {
   },
   11155111: {
     SoulboundNFT: {
-      address: "0x5664df5ee1d72b6d35886684c6be4a263550b218",
+      address: "0xa644a3ccdadc35273d11a9cc5a7f7c8b65f17fcb",
       abi: [
         {
           type: "constructor",
           inputs: [],
-          stateMutability: "nonpayable",
-        },
-        {
-          type: "function",
-          name: "addEventResult",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "eventId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "result",
-              type: "string",
-              internalType: "string",
-            },
-          ],
-          outputs: [],
           stateMutability: "nonpayable",
         },
         {
@@ -1330,6 +1325,19 @@ const deployedContracts = {
         },
         {
           type: "function",
+          name: "baseWalrusURI",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
           name: "getApproved",
           inputs: [
             {
@@ -1349,34 +1357,10 @@ const deployedContracts = {
         },
         {
           type: "function",
-          name: "getAthleteEvents",
+          name: "getTokenBlobId",
           inputs: [
             {
               name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-          ],
-          outputs: [
-            {
-              name: "",
-              type: "uint256[]",
-              internalType: "uint256[]",
-            },
-          ],
-          stateMutability: "view",
-        },
-        {
-          type: "function",
-          name: "getEventResult",
-          inputs: [
-            {
-              name: "tokenId",
-              type: "uint256",
-              internalType: "uint256",
-            },
-            {
-              name: "eventId",
               type: "uint256",
               internalType: "uint256",
             },
@@ -1386,6 +1370,25 @@ const deployedContracts = {
               name: "",
               type: "string",
               internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getTokenIdByAddress",
+          inputs: [
+            {
+              name: "user",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
             },
           ],
           stateMutability: "view",
@@ -1665,6 +1668,24 @@ const deployedContracts = {
           stateMutability: "nonpayable",
         },
         {
+          type: "function",
+          name: "updateMetadata",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "newBlobId",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
           type: "event",
           name: "Approval",
           inputs: [
@@ -1710,6 +1731,25 @@ const deployedContracts = {
               type: "bool",
               indexed: false,
               internalType: "bool",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "MetadataUpdated",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              indexed: true,
+              internalType: "uint256",
+            },
+            {
+              name: "blobId",
+              type: "string",
+              indexed: false,
+              internalType: "string",
             },
           ],
           anonymous: false,
@@ -1879,26 +1919,10 @@ const deployedContracts = {
           inputs: [],
         },
       ],
-      inheritedFunctions: {
-        approve: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        balanceOf: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        getApproved: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        isApprovedForAll: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        name: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        ownerOf: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        safeTransferFrom: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        setApprovalForAll: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        supportsInterface: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        symbol: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        tokenByIndex: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        tokenOfOwnerByIndex: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        tokenURI: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        totalSupply: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        transferFrom: "lib/openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-      },
+      inheritedFunctions: {},
     },
     EventFactory: {
-      address: "0xf03329d2ae10ac85aa7be8dfc200d49bfd7a3bc8",
+      address: "0xec99374f57cfb8659e35a922def3b5f2dde6659b",
       abi: [
         {
           type: "constructor",
@@ -2125,6 +2149,400 @@ const deployedContracts = {
         {
           type: "error",
           name: "AddMoreParticipants",
+          inputs: [],
+        },
+      ],
+      inheritedFunctions: {},
+    },
+    Event: {
+      address: "0xd78a3459fb56fbddff146464907a62b4d6abbe4b",
+      abi: [
+        {
+          type: "constructor",
+          inputs: [
+            {
+              name: "_name",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "_date",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "_location",
+              type: "string",
+              internalType: "string",
+            },
+            {
+              name: "_maxParticipants",
+              type: "uint256",
+              internalType: "uint256",
+            },
+            {
+              name: "_nftContractAddress",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "date",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getParticipantResultBlobId",
+          inputs: [
+            {
+              name: "participant",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "getResult",
+          inputs: [
+            {
+              name: "participant",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "isRegistered",
+          inputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "location",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "maxParticipants",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "name",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "nftContract",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "contract SoulboundNFT",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "owner",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "register",
+          inputs: [],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "registeredParticipants",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+              internalType: "uint256",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "renounceOwnership",
+          inputs: [],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "results",
+          inputs: [
+            {
+              name: "",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+              internalType: "string",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "resultsUploaded",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+              internalType: "bool",
+            },
+          ],
+          stateMutability: "view",
+        },
+        {
+          type: "function",
+          name: "transferOwnership",
+          inputs: [
+            {
+              name: "newOwner",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "function",
+          name: "uploadResults",
+          inputs: [
+            {
+              name: "participants",
+              type: "address[]",
+              internalType: "address[]",
+            },
+            {
+              name: "_results",
+              type: "string[]",
+              internalType: "string[]",
+            },
+          ],
+          outputs: [],
+          stateMutability: "nonpayable",
+        },
+        {
+          type: "event",
+          name: "OwnershipTransferred",
+          inputs: [
+            {
+              name: "previousOwner",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+            {
+              name: "newOwner",
+              type: "address",
+              indexed: true,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "ParticipantRegistered",
+          inputs: [
+            {
+              name: "participant",
+              type: "address",
+              indexed: false,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "ResultAdded",
+          inputs: [
+            {
+              name: "tokenId",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "eventId",
+              type: "uint256",
+              indexed: false,
+              internalType: "uint256",
+            },
+            {
+              name: "result",
+              type: "string",
+              indexed: false,
+              internalType: "string",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "event",
+          name: "ResultsUploaded",
+          inputs: [
+            {
+              name: "organizer",
+              type: "address",
+              indexed: false,
+              internalType: "address",
+            },
+          ],
+          anonymous: false,
+        },
+        {
+          type: "error",
+          name: "MaxRegisteredParticipantsReached",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "MismatchInParticipansAndResults",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "NoSouldBoundNFT",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "OwnableInvalidOwner",
+          inputs: [
+            {
+              name: "owner",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "OwnableUnauthorizedAccount",
+          inputs: [
+            {
+              name: "account",
+              type: "address",
+              internalType: "address",
+            },
+          ],
+        },
+        {
+          type: "error",
+          name: "ParticipantNotRegistered",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "RegisterPeriodExpired",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "ResultsAlreadyUploaded",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "ResultsNotUploadedYet",
+          inputs: [],
+        },
+        {
+          type: "error",
+          name: "UserAlreadyRegistered",
           inputs: [],
         },
       ],

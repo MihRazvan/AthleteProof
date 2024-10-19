@@ -17,9 +17,7 @@ contract SoulboundNFT is ERC721Enumerable {
 
     event MetadataUpdated(uint256 indexed tokenId, string blobId);
 
-    constructor(string memory _baseWalrusURI) ERC721("AthleteProof", "APROOF") {
-        baseWalrusURI = _baseWalrusURI;
-    }
+    constructor() ERC721("AthleteProof", "APROOF") {}
 
     modifier onlyExistingTokenId(uint256 tokenId) {
         if (ownerOf(tokenId) == address(0)) revert TokenIdDoesNotExist();
@@ -61,5 +59,9 @@ contract SoulboundNFT is ERC721Enumerable {
             return "";
         }
         return string(abi.encodePacked(baseWalrusURI, blobId));
+    }
+
+    function getTokenIdByAddress(address user) public view returns (uint256) {
+        return tokenOfOwnerByIndex(user, 0);
     }
 }
