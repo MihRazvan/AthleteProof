@@ -12,13 +12,17 @@ contract DeployScript is ScaffoldETHDeploy {
         SoulboundNFT nft = new SoulboundNFT();
         EventFactory eventFactory = new EventFactory(address(nft));
         Event firstEvent = new Event(
-            "dsadsa",
-            312331,
-            "dsadsadas",
-            2,
+            "Sofia Marathon",
+            2024,
+            "Sofia",
+            50,
             address(nft)
         );
         vm.stopBroadcast();
+
+        deployments.push(Deployment("SoulboundNFT", address(nft)));
+        deployments.push(Deployment("EventFactory", address(eventFactory)));
+        deployments.push(Deployment("Event", address(firstEvent)));
 
         // deploy more contracts here
         // DeployMyContract deployMyContract = new DeployMyContract();
